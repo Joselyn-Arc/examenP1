@@ -122,7 +122,7 @@ const CrudTipoInstitucion = () => {
         toast.current.show({
             severity: "success",
             summary: "Successful",
-            detail: "Provincia eliminada",
+            detail: "Tipo Institucion eliminada",
             life: 3000,
         });
     };

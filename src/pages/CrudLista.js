@@ -21,7 +21,7 @@ const CrudLista = () => {
         nombre: "",
         logo: "",
         nombre: "",
-        procesoEleccion: "",
+        procesoeleccion: "",
         activado: "",
     };
 
@@ -199,7 +199,10 @@ const CrudLista = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
+                    	
+
                     <Button label="Nuevo" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
+                 
                 </div>
             </React.Fragment>
         );
@@ -244,8 +247,8 @@ const CrudLista = () => {
     const procesoBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">ProcesoEleccion</span>
-               {rowData.procesoeleccion.nombreproceso}
+               <span className="p-column-title">ProcesoEleccion</span>
+                {rowData.procesoeleccion.nombreproceso}
             </>
         );
     };
@@ -309,6 +312,8 @@ const CrudLista = () => {
             <div className="actions">
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProduct(rowData)} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button value="Disabled" disabled="true" />
+        
             </div>
         );
     };
@@ -325,6 +330,8 @@ const CrudLista = () => {
 
     const productDialogFooter = (
         <>
+             <FileUpload ID="fuArchivo" runat="server" />
+           <Button ID="btnCargarArchivo" runat="server" Text="Cargar archivo" OnClick="btnCargarArchivo_Click" />
             <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
             <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
         </>
@@ -370,7 +377,7 @@ const CrudLista = () => {
                         <Column field="logo" header="Logo" body={LogoBodyTemplate} headerStyle={{ width: "14%", minWidth: "10rem" }}></Column>
                         <Column field="name" header="Nombre" body={nameBodyTemplate} headerStyle={{ width: "14%", minWidth: "10rem" }}></Column>
                         <Column field="proceso" header="Proceso" body={procesoBodyTemplate} headerStyle={{ width: "14%", minWidth: "10rem" }}></Column>
-                        <Column field="activo" header="Activado" body={activoBodyTemplate} headerStyle={{ width: "14%", minWidth: "10rem" }}></Column>
+                        <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
                     <Dialog visible={listaDialog} style={{ width: "450px" }} header="Lista" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
@@ -384,6 +391,7 @@ const CrudLista = () => {
                                 autoFocus
                                 className={classNames({
                                     "p-invalid": submitted && !lista.logo,
+                                    
                                 })}
                             />
                             {submitted && !lista.nombre && <small className="p-invalid">Es necesario cargar el logo.</small>}
@@ -404,7 +412,7 @@ const CrudLista = () => {
                             <label htmlFor="proceso">Proceso</label>
                             <InputText
                                 id="proceso"
-                                value={lista.nombre}
+                                value={lista.proceso}
                                 onChange={(e) => onInputChange(e, "proceso")}
                                 required
                                 autoFocus

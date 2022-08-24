@@ -8,6 +8,7 @@ const Dashboard = () => {
                 <div className="card">
                     <h5>Instituto Superior Tecnológico Luis Rogerio González</h5>
                     <p>Estudiante: </p>
+                    <p>Joselyn Arcentales </p>
                 </div>
             </div>
         </div>
