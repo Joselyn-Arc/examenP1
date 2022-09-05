@@ -4,12 +4,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton } from "primereact/radiobutton";
-import { InputNumber } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { ProvinciaService } from "../service/ProvinciaService";
@@ -35,13 +30,6 @@ const Crud = () => {
         const provinciaService = new ProvinciaService();
         provinciaService.getProvincia().then((data) => setProvincias(data));
     }, []);
-
-    const formatCurrency = (value) => {
-        return value.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
-        });
-    };
 
     const openNew = () => {
         setProvincia(emptyProvincia);
@@ -138,23 +126,6 @@ const Crud = () => {
         return index;
     };
 
-    const createId = () => {
-        let id = "";
-        let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    };
-
-    const exportCSV = () => {
-        dt.current.exportCSV();
-    };
-
-    const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
-    };
-
     const deleteSelectedProducts = () => {
         let _products = provincias.filter((val) => !selectedProvincias.includes(val));
         setProvincias(_products);
@@ -168,24 +139,10 @@ const Crud = () => {
         });
     };
 
-    const onCategoryChange = (e) => {
-        let _product = { ...provincia };
-        _product["category"] = e.value;
-        setProvincia(_product);
-    };
-
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || "";
         let _product = { ...provincia };
         _product[`${name}`] = val;
-
-        setProvincia(_product);
-    };
-
-    const onInputNumberChange = (e, nombre) => {
-        const val = e.value || 0;
-        let _product = { ...provincia };
-        _product[`${nombre}`] = val;
 
         setProvincia(_product);
     };
@@ -196,15 +153,6 @@ const Crud = () => {
                 <div className="my-2">
                     <Button label="Nuevo" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
                 </div>
-            </React.Fragment>
-        );
-    };
-
-    const rightToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
             </React.Fragment>
         );
     };
@@ -223,51 +171,6 @@ const Crud = () => {
             <>
                 <span className="p-column-title">Name</span>
                 {rowData.nombre}
-            </>
-        );
-    };
-
-    const imageBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Image</span>
-                <img src={`assets/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
-            </>
-        );
-    };
-
-    const priceBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Price</span>
-                {formatCurrency(rowData.price)}
-            </>
-        );
-    };
-
-    const categoryBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Category</span>
-                {rowData.category}
-            </>
-        );
-    };
-
-    const ratingBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Reviews</span>
-                <Rating value={rowData.rating} readonly cancel={false} />
-            </>
-        );
-    };
-
-    const statusBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Status</span>
-                <span className={`product-badge status-${rowData.inventoryStatus.toLowerCase()}`}>{rowData.inventoryStatus}</span>
             </>
         );
     };

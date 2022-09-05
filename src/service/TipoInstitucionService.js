@@ -1,19 +1,20 @@
 import axios from 'axios';
 
-export class TipoInstitucionService {
+const url="http://localhost:9090/api/v1.0/tipoInstitucion/";
+export class TipoInstitucionService {    
 
     getTipoInstitucion() {
-        return axios.get('http://localhost:9090/api/v1.0/tipoInstitucion').then(res => res.data.result);
+        return axios.get(url).then(res => res.data.result);
     }
     putTipoInstitucion(provin) {
-        return axios.put('http://localhost:9090/api/v1.0/tipoInstitucion', provin)
+        return axios.put(url, provin)
     }
 
     postTipoInstitucion(provi) {
-        return axios.post('http://localhost:9090/api/v1.0/tipoInstitucion', provi);
+        return axios.post(url, provi);
     }
 
     deleteTipoInstitucion(id){
-        return axios.delete('http://localhost:9090/api/v1.0/tipoInstitucions/ + id')
+        return axios.delete(url+id).then(resp=>console.log(resp))
     }
 }

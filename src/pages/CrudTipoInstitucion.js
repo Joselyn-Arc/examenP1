@@ -4,19 +4,14 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton } from "primereact/radiobutton";
-import { InputNumber } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { TipoInstitucionService } from "../service/TipoInstitucionService";
 
 const CrudTipoInstitucion = () => {
-    let emptyProvincia = {
-        id: null,
+    let emptyTipoInstitucion = {
+        id: "",
         nombre: "",
         descripcion: "",
     };
@@ -25,7 +20,7 @@ const CrudTipoInstitucion = () => {
     const [tipoInstitucionDialog, settipoInstitucionDialog] = useState(false);
     const [deletetipoInstitucionDialog, setDeletetipoInstitucionDialog] = useState(false);
     const [deletetipoInstitucionesDialog, setDeletetipoInstitucionesDialog] = useState(false);
-    const [tipoInstitucion, settipoInstitucion] = useState(emptyProvincia);
+    const [tipoInstitucion, settipoInstitucion] = useState(emptyTipoInstitucion);
     const [selectedtipoInstituciones, setSelectedtipoInstituciones] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
@@ -37,15 +32,8 @@ const CrudTipoInstitucion = () => {
         tipoInstitucionservice.getTipoInstitucion().then((data) => settipoInstituciones(data));
     }, []);
 
-    const formatCurrency = (value) => {
-        return value.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
-        });
-    };
-
     const openNew = () => {
-        settipoInstitucion(emptyProvincia);
+        settipoInstitucion(emptyTipoInstitucion);
         setSubmitted(false);
         settipoInstitucionDialog(true);
     };
@@ -55,11 +43,11 @@ const CrudTipoInstitucion = () => {
         settipoInstitucionDialog(false);
     };
 
-    const hideDeleteProductDialog = () => {
+    const hideDeleteTipoInstitucionDialog = () => {
         setDeletetipoInstitucionDialog(false);
     };
 
-    const hideDeleteProductsDialog = () => {
+    const hideDeleteTipoInstitucionsDialog = () => {
         setDeletetipoInstitucionesDialog(false);
     };
 
@@ -67,15 +55,15 @@ const CrudTipoInstitucion = () => {
         setSubmitted(true);
 
         if (tipoInstitucion.nombre.trim()) {
-            let _products = [...tipoInstituciones];
-            let _product = { ...tipoInstitucion };
+            let _tipoInstituciones = [...tipoInstituciones];
+            let _institucion = { ...tipoInstitucion };
             if (tipoInstitucion.id) {
                 const index = findIndexById(tipoInstitucion.id);
 
-                _products[index] = _product;
+                _tipoInstituciones[index] = _institucion;
 
-                const tiposerv = new TipoInstitucionService();
-                tiposerv.putTipoInstitucion(_product)
+                const tipoInstitucionservice = new TipoInstitucionService();
+                tipoInstitucionservice.putTipoInstitucion(_institucion)
                 toast.current.show({
                     severity: "success",
                     summary: "Successful",
@@ -84,10 +72,8 @@ const CrudTipoInstitucion = () => {
                 });
             } else {
                 const tiposerv = new TipoInstitucionService();
-                tiposerv.postTipoInstitucion(_product)
-                // _product.id = createId();
-                // _product.image = "product-placeholder.svg";
-                // _products.push(_product);
+                tiposerv.postTipoInstitucion(_institucion)
+                _tipoInstituciones.push(_institucion);
                 toast.current.show({
                     severity: "success",
                     summary: "Successful",
@@ -96,9 +82,9 @@ const CrudTipoInstitucion = () => {
                 });
             }
 
-            settipoInstituciones(_products);
+            settipoInstituciones(_tipoInstituciones);
             settipoInstitucionDialog(false);
-            settipoInstitucion(emptyProvincia);
+            settipoInstitucion(emptyTipoInstitucion);
         }
     };
 
@@ -107,16 +93,16 @@ const CrudTipoInstitucion = () => {
         settipoInstitucionDialog(true);
     };
 
-    const confirmDeleteProduct = (product) => {
+    const confirmDeleteTipoInstitucion = (product) => {
         settipoInstitucion(product);
         setDeletetipoInstitucionDialog(true);
     };
 
-    const deleteProduct = () => {
-        let _products = tipoInstituciones.filter((val) => val.id !== tipoInstitucion.id);
-        settipoInstituciones(_products);
+    const deleteTipoInstitucion = () => {
+        let _tipoInstituciones = tipoInstituciones.filter((val) => val.id !== tipoInstitucion.id);
+        settipoInstituciones(_tipoInstituciones);
         setDeletetipoInstitucionDialog(false);
-        settipoInstitucion(emptyProvincia);
+        settipoInstitucion(emptyTipoInstitucion);
         const tiposerv = new TipoInstitucionService();
         tiposerv.deleteTipoInstitucion(tipoInstitucion.id);
         toast.current.show({
@@ -135,61 +121,31 @@ const CrudTipoInstitucion = () => {
                 break;
             }
         }
-
         return index;
     };
 
-    const createId = () => {
-        let id = "";
-        let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    };
-
-    const exportCSV = () => {
-        dt.current.exportCSV();
-    };
-
-    const confirmDeleteSelected = () => {
-        setDeletetipoInstitucionesDialog(true);
-    };
-
-    const deleteSelectedProducts = () => {
-        let _products = tipoInstituciones.filter((val) => !selectedtipoInstituciones.includes(val));
-        settipoInstituciones(_products);
-        setDeletetipoInstitucionesDialog(false);
-        setSelectedtipoInstituciones(null);
-        toast.current.show({
+    const deleteSelectedTipoInstituciones = () => {
+        let _tipoInstituciones = tipoInstituciones.filter((val) => !selectedtipoInstituciones.includes(val));
+        console.log(_tipoInstituciones)
+       // settipoInstituciones(_tipoInstituciones);
+        //setDeletetipoInstitucionesDialog(false);
+        //setSelectedtipoInstituciones(null);
+       /* toast.current.show({
             severity: "success",
             summary: "Successful",
             detail: "Instituciones eliminadas ",
             life: 3000,
-        });
-    };
-
-    const onCategoryChange = (e) => {
-        let _product = { ...tipoInstitucion };
-        _product["category"] = e.value;
-        settipoInstitucion(_product);
+        });*/
     };
 
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || "";
-        let _product = { ...tipoInstitucion };
-        _product[`${name}`] = val;
+        let _institucion = { ...tipoInstitucion };
+        _institucion[`${name}`] = val;
 
-        settipoInstitucion(_product);
+        settipoInstitucion(_institucion);
     };
 
-    const onInputNumberChange = (e, nombre) => {
-        const val = e.value || 0;
-        let _product = { ...tipoInstitucion };
-        _product[`${nombre}`] = val;
-
-        settipoInstitucion(_product);
-    };
 
     const leftToolbarTemplate = () => {
         return (
@@ -197,15 +153,6 @@ const CrudTipoInstitucion = () => {
                 <div className="my-2">
                     <Button label="Nuevo" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
                 </div>
-            </React.Fragment>
-        );
-    };
-
-    const rightToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
             </React.Fragment>
         );
     };
@@ -237,56 +184,11 @@ const CrudTipoInstitucion = () => {
         );
     };
 
-    const imageBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Image</span>
-                <img src={`assets/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
-            </>
-        );
-    };
-
-    const priceBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Price</span>
-                {formatCurrency(rowData.price)}
-            </>
-        );
-    };
-
-    const categoryBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Category</span>
-                {rowData.category}
-            </>
-        );
-    };
-
-    const ratingBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Reviews</span>
-                <Rating value={rowData.rating} readonly cancel={false} />
-            </>
-        );
-    };
-
-    const statusBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Status</span>
-                <span className={`product-badge status-${rowData.inventoryStatus.toLowerCase()}`}>{rowData.inventoryStatus}</span>
-            </>
-        );
-    };
-
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteTipoInstitucion(rowData)} />
             </div>
         );
     };
@@ -307,16 +209,16 @@ const CrudTipoInstitucion = () => {
             <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
         </>
     );
-    const deleteProductDialogFooter = (
+    const deleteTipoInstitucionDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
-            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteTipoInstitucionDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteTipoInstitucion} />
         </>
     );
-    const deleteProductsDialogFooter = (
+    const deleteTipoInstitucionsDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductsDialog} />
-            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedProducts} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteTipoInstitucionsDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedTipoInstituciones} />
         </>
     );
 
@@ -350,7 +252,7 @@ const CrudTipoInstitucion = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={tipoInstitucionDialog} style={{ width: "450px" }} header="Provincia" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={tipoInstitucionDialog} style={{ width: "450px" }} header="Tipo Institucion" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                         <div className="field">
                             <label htmlFor="name">Nombre</label>
                             <InputText
@@ -380,7 +282,7 @@ const CrudTipoInstitucion = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deletetipoInstitucionDialog} style={{ width: "450px" }} header="Confirmación" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                    <Dialog visible={deletetipoInstitucionDialog} style={{ width: "450px" }} header="Confirmación" modal footer={deleteTipoInstitucionDialogFooter} onHide={hideDeleteTipoInstitucionDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: "2rem" }} />
                             {tipoInstitucion && (
@@ -391,7 +293,7 @@ const CrudTipoInstitucion = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deletetipoInstitucionesDialog} style={{ width: "450px" }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                    <Dialog visible={deletetipoInstitucionesDialog} style={{ width: "450px" }} header="Confirm" modal footer={deleteTipoInstitucionsDialogFooter} onHide={hideDeleteTipoInstitucionsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: "2rem" }} />
                             {tipoInstitucion && <span>Está seguro de borrar los tipos de institucion?</span>}

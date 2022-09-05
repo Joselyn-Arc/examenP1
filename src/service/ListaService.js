@@ -1,20 +1,21 @@
 import axios from "axios";
 
+const url = "http://localhost:9090/api/v1.0/lista/";
+
 export class ListaService {
-  getLista() {
-    return axios.get('http://localhost:9090/api/v1.0/lista').then(res => res.data.result);
-  }
+    getLista() {
+        return axios.get(url).then(res => res.data.result);
+    }
 
-  putLista(ls) {
-    return axios.put('http://localhost:9090/api/v1.0/lista', ls)
-  }
+    putLista(provin) {
+        return axios.put(url, provin)
+    }
 
-  postLista(list) {
-    return axios.post('http://localhost:9090/api/v1.0/lista', list);
-  }
+    postLista(provi) {
+        return axios.post(url, provi);
+    }
 
-  deleteLista(id){
-    return axios.delete('http://localhost:9090/api/v1.0/ciudad/ + id')
-  }
-
+    deleteLista(id){
+        return axios.delete(url+id).then(resp=>console.log(resp))
+    }
 }
