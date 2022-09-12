@@ -26,6 +26,7 @@ import './assets/demo/flags/flags.css';
 import './assets/demo/Demos.scss';
 import './assets/layout/layout.scss';
 import './App.scss';
+import Lista from './pages/Lista';
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static');
@@ -197,7 +198,7 @@ const App = () => {
                     <Route path="/crud-provincia" component={Crud} />
                     <Route path="/crud-cuidad" component={CrudCuidad} />
                     <Route path="/crud-tipoInstitucion" component={CrudTipoInstitucion} />
-                    <Route path="/crud-lista" component={CrudLista} />
+                    <Route path="/crud-lista" component={Lista} />
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode} />
