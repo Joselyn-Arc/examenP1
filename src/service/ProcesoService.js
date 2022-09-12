@@ -3,20 +3,9 @@ import axios from "axios";
 const url = "http://localhost:9090/api/v1.0/procesoeleccion/";
 export class ProcesoService {
  
-        getProceso( state) {
-            return axios
-                .get(url )
-                .then((res) => {
-                    state(res.data.result);
-                    const data = res.data.result;
-                    return data;
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        return error.response.status;
-                    }
-                });
-        }
+    getProceso() {
+        return axios.get(url).then(res => res.data.result);
+    }
     
         getProceso(state) {
             return axios

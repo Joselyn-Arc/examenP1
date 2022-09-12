@@ -46,7 +46,7 @@ const Lista = () => {
     const dt = useRef(null);
 
     useEffect(() => {
-        const candService = new ListaService()
+        const candService = new ListaService();
         candService.getLista().then((data) => setListas(data));
 
         const sexo = new ProcesoService();
@@ -95,7 +95,7 @@ const Lista = () => {
             let _product = { ...lista };
             if (lista.id) {
                 const object = new ListaService();
-                object.putlista(lista);
+                object.putLista(lista);
 
                 const index = findIndexById(lista.id);
                 _products[index] = _product;
@@ -109,7 +109,7 @@ const Lista = () => {
             } else {
 
                 const listaService=new ListaService();
-                 listaService.postlista(_product);
+                 listaService.postLista(_product);
                _products.push(_products);
                 
                 toast.current.show({
